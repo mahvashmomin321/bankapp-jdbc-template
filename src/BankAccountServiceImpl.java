@@ -78,7 +78,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 		else if (balance - amount >= 0) {
 			balance = balance - amount;
 			bankAccountDao.updateBalance(accountId, balance);
-			// DbUtil.commit();
 			return balance;
 		} else {
 			throw new LowBalanceException("You don't have sufficient fund");
@@ -107,7 +106,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 			throw new BankAccountNotFoundException("Bank Account doesn't exist");
 		balance = balance + amount;
 		bankAccountDao.updateBalance(accountId, balance);
-		DbUtil.commit();
 		return balance;
 	}
 

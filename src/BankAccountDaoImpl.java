@@ -118,38 +118,20 @@ public class BankAccountDaoImpl implements BankAccountDao {
 
 	@Override
 	public void updateBalance(long accountId, double newBalance) throws BankAccountNotFoundException {
-		String query = "UPDATE bankaccounts SET account_balance=? WHERE account_id=?";
-		try  {
-			 jdbcTemplate.update(query,new Object[] {newBalance,accountId});
+		String query = "UPDATE bankaccounts SET account_balance=? WHERE account_id="+accountId;
+		// try  {
+			 jdbcTemplate.update(query,newBalance);
 	
-		}catch(EmptyResultDataAccessException ex){
-			BankAccountNotFoundException  re= new BankAccountNotFoundException("Bank Account not Found");
-			ex.initCause(re);
-			throw re;
-		}
+		// }catch(EmptyResultDataAccessException ex){
+		// 	BankAccountNotFoundException  re= new BankAccountNotFoundException("Bank Account not Found");
+		// 	ex.initCause(re);
+		// 	throw re;
+		// }
 	
 
 	}
 
-	/*public static void commit() {
-		try {
-			if (connection != null) {
-				connection.commit();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
 
-	public static void rollback() {
-		try {
-			if (connection != null) {
-				connection.rollback();
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}*/
 
 	
 
