@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.springframework.dao.EmptyResultDataAccessException;
 import com.capgemini.bankapp.dao.BankAccountDao;
 import com.capgemini.bankapp.model.BankAccount;
 import com.capgemini.bankapp.util.DbUtil;
@@ -74,7 +74,7 @@ public class BankAccountDaoImpl implements BankAccountDao {
 	}
 
 	@Override
-	public BankAccount searchAccount(long accountId) {
+	public BankAccount searchAccount(long accountId) throws BankAccountNotFoundException  {
 		BankAccount account=null;
 		try{
 			String query = "SELECT * FROM bankaccounts WHERE account_id="+accountId ;
@@ -87,44 +87,49 @@ public class BankAccountDaoImpl implements BankAccountDao {
 				return bankAcc;
 			});
 		}
-		catch(Exception ex){
-			ex.printStackTrace();
-		}
 		catch(EmptyResultDataAccessException ex){
-			System.out.println("accoount");
+			BankAccountNotFoundException  re= new BankAccountNotFoundException("Bank Account not Found");
+			ex.initCause(re);
+			throw re;
+
 		}
+	
 		return account;
 	}
 
 
-	/*@Override
-	public double getBalance(long accountId) {
-		String query = "SELECT account_balance FROM bankaccounts WHERE account_id=" + accountId;
+	@Override
+	public double getBalance(long accountId) throws BankAccountNotFoundException {
+		String query = "SELECT account_balance FROM bankaccounts WHERE account_id=?";
 		double balance = -1;
-		// Connection connection = DbUtil.getConnection();
 		try  {
-			if(result.next())
-				balance = result.getDouble(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
+				balance = jdbcTemplate.queryForObject(query,new Object[] {accountId},(rs,rowNum)->{
+					double accountBalance= rs.getDouble(1);
+					return accountBalance;
+				});
+		}catch(EmptyResultDataAccessException ex){
+			BankAccountNotFoundException  re= new BankAccountNotFoundException("Bank Account not Found");
+			ex.initCause(re);
+			throw re;
 		}
 		return balance;
 	}
 
-	@Override
-	public void updateBalance(long accountId, double newBalance) {
-		String query = "UPDATE bankaccounts SET account_balance=? WHERE account_id=?";
-		// Connection connection = DbUtil.getConnection();
-		try  {
-			statement.setDouble(1, newBalance);
-			statement.setLong(2, accountId);
-			int result = statement.executeUpdate();
-			System.out.println("No of rows affected:" + result);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 
-	}*/
+	@Override
+	public void updateBalance(long accountId, double newBalance) throws BankAccountNotFoundException {
+		String query = "UPDATE bankaccounts SET account_balance=? WHERE account_id=?";
+		try  {
+			 jdbcTemplate.update(query,new Object[] {newBalance,accountId});
+	
+		}catch(EmptyResultDataAccessException ex){
+			BankAccountNotFoundException  re= new BankAccountNotFoundException("Bank Account not Found");
+			ex.initCause(re);
+			throw re;
+		}
+	
+
+	}
 
 	/*public static void commit() {
 		try {

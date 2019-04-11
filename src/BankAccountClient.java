@@ -62,7 +62,7 @@ public class BankAccountClient {
 					}
 					break;
 
-				/*case 2:
+				case 2:
 					System.out.println("Enter Account Id");
 					accountId = Long.parseLong(reader.readLine());
 					System.out.println("Enter Amount");
@@ -73,10 +73,10 @@ public class BankAccountClient {
 					} catch (LowBalanceException e) {
 						// logger.error("Withdraw failed", e);
 					} catch (BankAccountNotFoundException e) {
-						// logger.error("Account Not Found", e);
+						System.out.println("Account Not Found");
 					}
 					break;
-
+				
 				case 3:
 					System.out.println("Enter Account Id");
 					accountId = Long.parseLong(reader.readLine());
@@ -87,9 +87,9 @@ public class BankAccountClient {
 						balance = bankService.deposit(accountId, amount);
 						System.out.println("Transaction successful=" + balance);
 					} catch (BankAccountNotFoundException e2) {
-						// logger.error("Account Not Found", e2);
+						System.out.println("Account not found");
 					}
-					break;
+					break; 
 
 				case 4:
 					System.out.println("Enter account Id");
@@ -99,10 +99,10 @@ public class BankAccountClient {
 						accountBalance1 = bankService.checkBalance(accountId);
 						System.out.println("Current Balance =" + accountBalance1);
 					} catch (BankAccountNotFoundException e1) {
-						// logger.error("Account Not Found", e1);
+						System.out.println("Account Not Found");
 					}
 					break;
-
+					
 				case 5:
 					System.out.println("Enter Account Id");
 					fromAccount = Long.parseLong(reader.readLine());
@@ -117,12 +117,12 @@ public class BankAccountClient {
 							balance1 = bankService.fundTransfer(fromAccount, toAccount, amount);
 							System.out.println("Transcation successful" + balance1);
 						} catch (BankAccountNotFoundException e) {
-							// logger.error("Account Not Found", e);
+							System.out.println(e.getMessage());
 						}
 					} catch (LowBalanceException e) {
 						System.out.println(e.getMessage());
 					}
-					break;*/
+					break;
 				case 6:
 					System.out.println("Enter account Id");
 					accountId = Long.parseLong(reader.readLine());
@@ -155,7 +155,6 @@ public class BankAccountClient {
 						System.out.println(bankAccount);
 					} catch (BankAccountNotFoundException e) {
 						System.out.println("account not found");
-						e.printStackTrace();
 					}
 					break;
 

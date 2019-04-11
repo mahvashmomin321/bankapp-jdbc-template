@@ -13,7 +13,7 @@ public interface BankAccountService {
 	public List<BankAccount> findAllBankAccounts();
 	public BankAccount searchAccount(long accountId) throws BankAccountNotFoundException;
 
-	/*public double checkBalance(long accountId) throws BankAccountNotFoundException;
+	public double checkBalance(long accountId) throws BankAccountNotFoundException;
 
 	public double withdraw(long accountId, double amount) throws LowBalanceException, BankAccountNotFoundException;
 
@@ -21,7 +21,7 @@ public interface BankAccountService {
 
 
 	public double fundTransfer(long fromAccount, long toAccount, double amount)
-			throws LowBalanceException, BankAccountNotFoundException;*/
+			throws LowBalanceException, BankAccountNotFoundException;
 
 
 

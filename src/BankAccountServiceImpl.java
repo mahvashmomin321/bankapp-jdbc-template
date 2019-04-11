@@ -10,6 +10,8 @@ import com.capgemini.bankapp.dao.impl.BankAccountDaoImpl;
 import com.capgemini.bankapp.model.BankAccount;
 import com.capgemini.bankapp.service.BankAccountService;
 import com.capgemini.bankapp.util.DbUtil;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 public class BankAccountServiceImpl implements BankAccountService {
 
@@ -58,7 +60,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 		return account;
 	}
 	
-	/*@Override
+	@Override
 	public double checkBalance(long accountId) throws BankAccountNotFoundException {
 
 		double balance = bankAccountDao.getBalance(accountId);
@@ -66,6 +68,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 			return balance;
 		throw new BankAccountNotFoundException("BankAccount doesn't exist..");
 	}
+	
 
 	@Override
 	public double withdraw(long accountId, double amount) throws LowBalanceException, BankAccountNotFoundException {
@@ -75,13 +78,14 @@ public class BankAccountServiceImpl implements BankAccountService {
 		else if (balance - amount >= 0) {
 			balance = balance - amount;
 			bankAccountDao.updateBalance(accountId, balance);
-			DbUtil.commit();
+			// DbUtil.commit();
 			return balance;
 		} else {
 			throw new LowBalanceException("You don't have sufficient fund");
 		}
 	}
 
+	
 	public double withdrawForFundTransfer(long accountId, double amount)
 			throws LowBalanceException, BankAccountNotFoundException {
 		double balance = bankAccountDao.getBalance(accountId);
@@ -110,18 +114,16 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 
 	@Override
+	@Transactional(rollbackFor=BankAccountNotFoundException.class)
 	public double fundTransfer(long fromAccount, long toAccount, double amount)
 			throws LowBalanceException, BankAccountNotFoundException {
 		try {
 			double newBalance = withdrawForFundTransfer(fromAccount, amount);
 			deposit(toAccount, amount);
-			DbUtil.commit();
 			return newBalance;
 		} catch (LowBalanceException | BankAccountNotFoundException e) {
-			DbUtil.rollback();
-			// logger.error("Exception", e);
 			throw e;
 		}
-	}*/
+	}
 
 }
